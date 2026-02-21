@@ -103,7 +103,7 @@ if wish:
 st.markdown("## 🔐 Secret Message")
 code = st.text_input("Enter the secret code")
 
-if code == "AASHITA✨":
+if code == "AASHITA":
     st.success("You are deeply cherished. More than words can ever explain 💖")
 
 # ---------- SURPRISE ----------
