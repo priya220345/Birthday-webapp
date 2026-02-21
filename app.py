@@ -1,137 +1,150 @@
 import streamlit as st
 import time
-from datetime import datetime
 
 st.set_page_config(
-    page_title="Happy Birthday Aashita 🎂",
-    page_icon="❄️",
+    page_title="Happy Birthday Aashita 💖",
+    page_icon="🎂",
     layout="centered"
 )
 
-# ❄️ Snowflake animation (CSS + JS)
+# 💗 CSS + JS
 st.markdown("""
 <style>
 body {
-    background: linear-gradient(135deg, #fdeff9, #ec38bc, #7303c0);
+    background: linear-gradient(180deg, #ffd1dc, #fcbad3);
     overflow: hidden;
+    font-family: 'Segoe UI', sans-serif;
 }
-.snowflake {
+
+.heart {
     position: fixed;
-    top: -10px;
-    z-index: 9999;
-    color: white;
-    font-size: 1.2em;
-    animation: fall linear infinite;
+    color: #ff4d6d;
+    animation: float 6s infinite;
+    font-size: 20px;
 }
-@keyframes fall {
-    to {
-        transform: translateY(110vh);
-    }
+
+@keyframes float {
+    0% { transform: translateY(100vh); opacity: 1; }
+    100% { transform: translateY(-10vh); opacity: 0; }
 }
-.card {
-    background: rgba(255,255,255,0.92);
-    padding: 30px;
-    border-radius: 22px;
-    box-shadow: 0px 15px 40px rgba(0,0,0,0.2);
-}
+
 .center {
     text-align: center;
 }
+
 .title {
-    font-size: 55px;
-    font-weight: 800;
-    color: #ffffff;
-    text-align: center;
+    font-size: 50px;
+    font-weight: bold;
+    color: #7a003c;
 }
+
 .subtitle {
-    font-size: 22px;
-    color: #fcefee;
-    text-align: center;
+    font-size: 20px;
+    color: #5a0030;
+}
+
+.card {
+    background: rgba(255,255,255,0.95);
+    padding: 30px;
+    border-radius: 25px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+}
+
+button[kind="primary"] {
+    background-color: #ff4d6d !important;
+    border-radius: 25px !important;
+    font-size: 18px !important;
 }
 </style>
 
 <script>
-const snowflakes = Array.from({ length: 40 });
-snowflakes.forEach((_, i) => {
-  const snow = document.createElement("div");
-  snow.className = "snowflake";
-  snow.innerHTML = "❄";
-  snow.style.left = Math.random() * 100 + "vw";
-  snow.style.animationDuration = (Math.random() * 5 + 5) + "s";
-  snow.style.fontSize = (Math.random() * 10 + 10) + "px";
-  document.body.appendChild(snow);
-});
+for (let i = 0; i < 25; i++) {
+    let heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "💗";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = (Math.random() * 3 + 4) + "s";
+    document.body.appendChild(heart);
+}
 </script>
 """, unsafe_allow_html=True)
 
-# 🌸 Title
-st.markdown('<div class="title">Happy Birthday Aashita 🎂</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">This page exists only for you ✨</div>', unsafe_allow_html=True)
+# SESSION STATE
+if "started" not in st.session_state:
+    st.session_state.started = False
 
-st.write("")
+if "yes_clicked" not in st.session_state:
+    st.session_state.yes_clicked = False
 
-# 💌 Main Card
-st.markdown('<div class="card">', unsafe_allow_html=True)
-st.markdown("""
-### 💖 Hey Aashita,
+# 🎉 LANDING SCREEN
+if not st.session_state.started:
+    st.markdown('<div class="center title">Happy Birthday, Beautiful 💖</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="center subtitle">Today is all about celebrating YOU ✨</div>',
+        unsafe_allow_html=True
+    )
+    st.write("")
+    if st.button("🎉 Start the Celebration"):
+        st.session_state.started = True
+        st.rerun()
 
-If you’re reading this, it means today is **your day** 🌸  
-Not just another date — but a reminder of how special you are.
-
-You have this quiet magic about you…  
-The kind that makes people feel comfortable, heard, and happy ✨  
-
-This little web page can’t fully express it,  
-but it carries one message clearly:
-
-**You matter. A lot.** 💕
-""")
-st.markdown('</div>', unsafe_allow_html=True)
-
-st.write("")
-
-# 🎁 Surprise 1
-if st.button("🎁 Open First Surprise"):
-    with st.spinner("Unwrapping something special..."):
-        time.sleep(2)
-    st.success("🌷 A Wish Just for You")
+# 💌 QUESTION SCREEN
+elif not st.session_state.yes_clicked:
+    st.markdown('<div class="card center">', unsafe_allow_html=True)
     st.markdown("""
-    May your mornings feel lighter,  
-    your nights feel peaceful,  
-    and your heart always feel safe where it belongs 💫  
+    ### 💭 One Important Question...
 
-    You deserve a life that feels **soft, exciting, and full** 🌸
+    **Aashita, do you know how special you are?** 💗  
+    Be honest 👀
     """)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-# 🎁 Surprise 2
-if st.button("✨ Open Second Surprise"):
-    st.balloons()
+    col1, col2 = st.columns(2)
+
+    with col1:
+        if st.button("✅ YES"):
+            st.session_state.yes_clicked = True
+            st.balloons()
+            st.rerun()
+
+    with col2:
+        st.markdown("""
+        <button id="noBtn" style="
+            padding: 10px 25px;
+            border-radius: 25px;
+            border: none;
+            background-color: #aaa;
+            font-size: 18px;
+        ">❌ NO</button>
+
+        <script>
+        const btn = document.getElementById("noBtn");
+        btn.onmouseover = () => {
+            btn.style.position = "absolute";
+            btn.style.left = Math.random() * 70 + "%";
+            btn.style.top = Math.random() * 70 + "%";
+        }
+        </script>
+        """, unsafe_allow_html=True)
+
+# 💖 EMOTIONAL MESSAGE
+else:
+    st.markdown('<div class="card center">', unsafe_allow_html=True)
     st.markdown("""
-    🎈 Fun fact about you, Aashita:  
-    You make moments memorable without even trying.  
-    That’s rare. And beautiful. 💖
+    ### 💌 This is for you, Aashita…
+
+    I hope you always remember this moment.
+
+    You are **deeply appreciated**,  
+    **quietly admired**,  
+    and **sincerely cared for** 💗  
+
+    Your presence makes days softer  
+    and moments warmer ✨  
+
+    Never let the world make you forget  
+    how rare and beautiful your heart is 🌸  
+
+    **Happy Birthday. Always stay you.** 🎂💖
     """)
-
-# 🔐 Secret Message
-code = st.text_input("🔐 Enter the secret word to unlock something special:")
-
-if code.lower() == "aashita":
-    st.markdown("""
-    💌 **Secret Message Unlocked**
-
-    Someone made this page because  
-    you’re genuinely appreciated —  
-    more than you probably realize 🌷  
-
-    Never doubt your worth.  
-    Never shrink your light.  
-    The world needs *your* version of magic ✨
-    """)
-
-# 🎂 Footer
-st.write("")
-st.markdown("---")
-st.markdown(
-    f"<div class='center'>Made with ❤️ on {datetime.now().strftime('%d %B %Y')} ❄️🎂</div>",
-    unsafe_allow_html=True
-)
+    st.markdown('</div>', unsafe_allow_html=True)
